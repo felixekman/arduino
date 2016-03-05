@@ -60,7 +60,7 @@
 
 #include <avr/pgmspace.h>
 
-#define USE_AREF 0x2 /* see 28.16.3 in 'AU' manual - this is the REFCTRL bits for the reference select, AREF on PORTA (PA0) */
+#define USE_AREF analogReference_PORTA0 /* see 28.16.3 in 'AU' manual - this is the REFCTRL bits for the reference select, AREF on PORTA (PA0) */
 
 
 #define NUM_DIGITAL_PINS            62
@@ -156,6 +156,7 @@
 
 
 #define DEFAULT_TWI TWID /* this is the TWI that is mapped to 20/21 */
+#define TWID_VECT_ENABLE /* use this to select the correct interrupt vectors */
 
 // serial port 0
 #define SERIAL_0_PORT_NAME PORTC
@@ -165,6 +166,7 @@
 #define SERIAL_0_DRE_ISR ISR(USARTC0_DRE_vect)
 #define SERIAL_0_RX_PIN_INDEX 2 /* the pin number on the port, not the mapped digital pin number */
 #define SERIAL_0_TX_PIN_INDEX 3 /* the pin number on the port, not the mapped digital pin number */
+#define USARTC0_VECTOR_EXISTS
 
 // serial port 1
 #define SERIAL_1_PORT_NAME PORTD
@@ -174,6 +176,7 @@
 #define SERIAL_1_DRE_ISR ISR(USARTD0_DRE_vect)
 #define SERIAL_1_RX_PIN_INDEX 2 /* the pin number on the port, not the mapped digital pin number */
 #define SERIAL_1_TX_PIN_INDEX 3 /* the pin number on the port, not the mapped digital pin number */
+#define USARTD0_VECTOR_EXISTS
 
 // serial port 2
 #define SERIAL_2_PORT_NAME PORTE
@@ -183,6 +186,7 @@
 #define SERIAL_2_DRE_ISR ISR(USARTE1_DRE_vect)
 #define SERIAL_2_RX_PIN_INDEX 6 /* the pin number on the port, not the mapped digital pin number */
 #define SERIAL_2_TX_PIN_INDEX 7 /* the pin number on the port, not the mapped digital pin number */
+#define USARTE1_VECTOR_EXISTS
 
 // serial port 3
 #define SERIAL_3_PORT_NAME PORTF
@@ -192,6 +196,7 @@
 #define SERIAL_3_DRE_ISR ISR(USARTF0_DRE_vect)
 #define SERIAL_3_RX_PIN_INDEX 2 /* the pin number on the port, not the mapped digital pin number */
 #define SERIAL_3_TX_PIN_INDEX 3 /* the pin number on the port, not the mapped digital pin number */
+#define USARTF0_VECTOR_EXISTS
 
 
 

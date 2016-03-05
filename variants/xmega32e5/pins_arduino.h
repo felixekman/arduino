@@ -91,7 +91,7 @@
 
 
 // NOTE:  'E' series can have analog inputs on PORTD.  It can also support ARef on PORTA pin 0, or PORTD pin 0
-#define USE_AREF 0x2 /* see 24.14.3 in 'E' manual - this is the REFCTRL bits for the reference select, AREF on PORTA (PA0) */
+#define USE_AREF analogReference_PORTA0 /* see 28.16.3 in 'AU' manual - this is the REFCTRL bits for the reference select, AREF on PORTA (PA0) */
 
 #define NUM_DIGITAL_PINS            18
 
@@ -196,6 +196,8 @@
 // --------------------------------------------
 
 #define DEFAULT_TWI TWIC
+#define TWIC_VECT_ENABLE /* use this to select the correct interrupt vectors */
+
 #define DEFAULT_SPI SPIC
 
 // serial port 0
@@ -208,6 +210,7 @@
 #define SERIAL_0_REMAP_BIT 4    /* the bit needed to remap the port if SERIAL_0_REMAP is defined */
 #define SERIAL_0_RX_PIN_INDEX 2 /* the pin number on the port, not the mapped digital pin number */
 #define SERIAL_0_TX_PIN_INDEX 3 /* the pin number on the port, not the mapped digital pin number */
+#define USARTD0_VECTOR_EXISTS
 
 // serial port 1
 #define SERIAL_1_PORT_NAME PORTC
@@ -219,6 +222,7 @@
 #define SERIAL_1_REMAP_BIT 4    /* the bit needed to remap the port if SERIAL_1_REMAP is defined */
 #define SERIAL_1_RX_PIN_INDEX 2 /* the pin number on the port, not the mapped digital pin number */
 #define SERIAL_1_TX_PIN_INDEX 3 /* the pin number on the port, not the mapped digital pin number */
+#define USARTC0_VECTOR_EXISTS
 
 
 // For atmega/Arduino Uno shield compatibility, with DIGITAL_IO_PIN_SHIFT defined,
@@ -576,12 +580,17 @@ const uint8_t PROGMEM digital_pin_to_bit_mask_PGM[] = {
 };
 
 
+
+
 const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
   // TIMERS
   // -------------------------------------------
   // The timers on the E5 are a bit different than the others
   // Since TIMERD5 only goes tp PD4, PD5, PD6, PD7, I have to
-  // map them to places that have PWM.
+  // map them to places that have PWM.  Also, PD6 and PD7 don't
+  // seem to work very well.  PC0 through PC3 work pretty well,
+  // but PC0 and PC1 are TWI pins.  As such, the mapping won't
+  // work very well if Arduino compatibility is desired.
 
 #ifndef DIGITAL_IO_PIN_SHIFT
   NOT_ON_TIMER,  // PD 0 ** 0 **
@@ -595,8 +604,8 @@ const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
 #endif // DIGITAL_IO_PIN_SHIFT
   TIMERD5,       // PD 4 ** 4 ** PWM 3
   TIMERD5,       // PD 5 ** 5 ** PWM 4
-  TIMERD5,       // PD 6 ** 6 ** PWM 5
-  TIMERD5,       // PD 7 ** 7 ** PWM 6
+  NOT_ON_TIMER,  //TIMERD5,       // PD 6 ** 6 ** PWM 5
+  NOT_ON_TIMER,  //TIMERD5,       // PD 7 ** 7 ** PWM 6
 #ifdef DIGITAL_IO_PIN_SHIFT
   NOT_ON_TIMER,  // PD 1 ** 9 **
 #else // no pin shifting
@@ -605,11 +614,11 @@ const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
 #endif // DIGITAL_IO_PIN_SHIFT
   TIMERC4,       // PC 2 ** 10 **
   TIMERC4,       // PC 3 ** 11 **
-  TIMERC4,       // PC 4 ** 12 ** SPI_SS
+  NOT_ON_TIMER,  //TIMERC4,       // PC 4 ** 12 ** SPI_SS
 // NOTE:  timer doesn't change with DIGITAL_IO_PIN_SHIFT
-  TIMERC4,       // PC 5 ** 13 ** SPI_SCK
-  TIMERC4,       // PC 6 ** 14 ** SPI_MISO
-  TIMERC4,       // PC 7 ** 15 ** SPI_MOSI
+  NOT_ON_TIMER,  //TIMERC4,       // PC 5 ** 13 ** SPI_SCK
+  NOT_ON_TIMER,  //TIMERC4,       // PC 6 ** 14 ** SPI_MISO
+  NOT_ON_TIMER,  //TIMERC4,       // PC 7 ** 15 ** SPI_MOSI
 // NOTE:  'not on timer' doesn't change with DIGITAL_IO_PIN_SHIFT
   NOT_ON_TIMER,  // PR 0 ** 16 **
   NOT_ON_TIMER,  // PR 1 ** 17 ** default LED
